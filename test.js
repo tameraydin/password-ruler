@@ -1,48 +1,55 @@
 import test from 'ava';
-import PswdRuler from './index';
+import PasswordRuler from './index';
 
-let myPswdRuler;
+const mockRuler = new PasswordRuler();
 
-test.before(t => {
-  myPswdRuler = new PswdRuler();
-});
+const fixtureProperValidators = {
+    'x': {
+      'validate': function() {},
+      'weight': 1
+    },
+    'y': {},
+    'z': null
+  };
+const fixtureImproperValidator1 = ['', function() {}];
+const fixtureImproperValidator2 = [3, function() {}];
+const fixtureImproperValidator3 = ['x', 'x'];
+const fixtureImproperValidator4 = ['x', function() {}, 'y'];
+const fixtureProperValidator1 = ['x', function() {}];
+const fixtureProperValidator2 = ['y', function() {}, 2];
+const fixtureInvalidPassword = 1;
+const fixtureValidPassword = 'x';
 
 test('PasswordRuler', t => {
-  t.ok(myPswdRuler.rules);
-  t.ok(myPswdRuler.addRule);
-  t.ok(myPswdRuler.check);
+  t.ok(mockRuler.validators);
+  t.ok(mockRuler.addValidator);
+  t.ok(mockRuler.check);
 
-  let myPswdRulerWithRules =
-    new PswdRuler({
-      'x': {
-        'validator': function() {},
-        'weight': 1
-      },
-      'y': {},
-      'z': null
-    });
-  t.is(Object.keys(myPswdRulerWithRules.rules).length, 1);
+  let mockRulerWithRules = new PasswordRuler(fixtureProperValidators);
+  t.is(Object.keys(mockRulerWithRules.validators).length, 1);
 });
 
-test('PasswordRuler:addRule', t => {
-  t.notOk(myPswdRuler.addRule('', function() {}));
-  t.notOk(myPswdRuler.addRule(3, function() {}));
-  t.notOk(myPswdRuler.addRule('x', 'x'));
-  t.notOk(myPswdRuler.addRule('x', function() {}, 'y'));
+test('PasswordRuler:addValidator', t => {
+  t.notOk(mockRuler.addValidator.apply(mockRuler, fixtureImproperValidator1));
+  t.notOk(mockRuler.addValidator.apply(mockRuler, fixtureImproperValidator2));
+  t.notOk(mockRuler.addValidator.apply(mockRuler, fixtureImproperValidator3));
+  t.notOk(mockRuler.addValidator.apply(mockRuler, fixtureImproperValidator4));
 
-  t.is(myPswdRuler.addRule('x', function() {}), myPswdRuler);
-  t.ok(myPswdRuler.rules.x);
-  t.ok(myPswdRuler.rules.x.validator);
-  t.is(myPswdRuler.rules.x.weight, 1);
+  t.is(mockRuler.addValidator.apply(
+    mockRuler, fixtureProperValidator1), mockRuler);
+  t.ok(mockRuler.validators.x);
+  t.ok(mockRuler.validators.x.validate);
+  t.is(mockRuler.validators.x.weight, 1);
 
-  t.is(myPswdRuler.addRule('y', function() {}, 2), myPswdRuler);
-  t.is(myPswdRuler.rules.y.weight, 2);
+  t.is(mockRuler.addValidator.apply(
+    mockRuler, fixtureProperValidator2), mockRuler);
+  t.is(mockRuler.validators.y.weight, 2);
 });
 
 test('PasswordRuler:check', t => {
-  t.notOk(myPswdRuler.check(1));
+  t.notOk(mockRuler.check.call(mockRuler, fixtureInvalidPassword));
 
-  let validResult = myPswdRuler.check('x');
+  let validResult = mockRuler.check.call(mockRuler, fixtureValidPassword);
   t.ok(validResult);
   t.is(validResult.constructor.name, 'PasswordRulerResult');
 });
