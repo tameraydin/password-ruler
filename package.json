@@ -1,0 +1,11 @@
+{
+  "name": "password-ruler",
+  "scripts": {
+    "watch": "onchange '*.js' -- ava",
+    "test": "ava"
+  },
+  "devDependencies": {
+    "ava": "^0.11.0",
+    "onchange": "^2.0.0"
+  }
+}
