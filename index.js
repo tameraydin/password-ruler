@@ -1,10 +1,10 @@
 'use strict'
 
 class PasswordRuler {
-  constructor(rules) {
-    this.rules = {};
+  constructor(validators) {
+    this.validators = {};
 
-    PasswordRuler.applyRules(this, rules);
+    PasswordRuler.assignValidators(this, validators);
   }
 
   check(password) {
@@ -12,53 +12,65 @@ class PasswordRuler {
       return false;
     }
 
-    return new PasswordRulerResult(password, this.rules);
+    return new PasswordRulerResult(password, this.validators);
   }
 
-  addRule(name, validator, weight) {
+  addValidator(name, validate, weight) {
     if (!name || typeof name !== 'string' ||
-        typeof validator !== 'function' ||
+        typeof validate !== 'function' ||
         (weight && typeof weight !== 'number')) {
       return false;
     }
 
-    this.rules[name] = {
-      validator: validator,
+    this.validators[name] = {
+      validate: validate,
       weight: weight || 1
     };
 
     return this;
   }
 
-  static applyRules(ruler, rules) {
-    if (!(rules instanceof Object)) {
-      return ruler;
+  static assignValidators(passwordRuler, validators) {
+    if (!(validators instanceof Object)) {
+      return passwordRuler;
     }
 
-    Object.keys(rules).forEach((ruleName) => {
-      let ruleObj = rules[ruleName];
-      if (ruleObj) {
-        ruler.addRule(ruleName, ruleObj.validator, ruleObj.weight);
+    Object.keys(validators).forEach((validatorName) => {
+      let validatorObj = validators[validatorName];
+      if (validatorObj) {
+        passwordRuler.addValidator(
+          validatorName, validatorObj.validate, validatorObj.weight);
       }
     });
-
-    return ruler;
   }
 }
 
 class PasswordRulerResult {
 
-  constructor(password, rules) {
-    this.ready = false;
-    this.inProgress = false;
+  constructor(password, validators) {
     this.score = -1;
-    this.rules = Object.assign({}, rules);
+    this.validators = validators;
 
-    PasswordRulerResult.generate(this, password);
+    PasswordRulerResult.calculate(this, password);
   }
 
-  static generate(result, password) {
-    return result;
+  static calculate(passwordRulerResult, password) {
+    let validatorKeys = Object.keys(passwordRulerResult.validators);
+    let scorePerValidator = 100 / validatorKeys.length;
+    let score = 0;
+
+    validatorKeys.forEach(function(key) {
+      let validator = passwordRulerResult.validators[key];
+      let weight = validator.weight;
+
+      validator = !!validator.validate(password);
+
+      if (validator) {
+        score =+ scorePerValidator * weight;
+      }
+    });
+
+    passwordRulerResult.score = Math.ceil(score);
   }
 }
 
