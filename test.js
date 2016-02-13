@@ -34,29 +34,29 @@ const fixtureProperValidatorArgs2 = ['b', function() {}, 2];
 // const fixtureValidPassword = 'x';
 
 test('PasswordRuler()', t => {
-  var ruler1 = new PasswordRuler();
+  let ruler1 = new PasswordRuler();
 
   t.is(ruler1.levels.length, 0);
   t.is(ruler1.strength, 0);
   t.is(ruler1.score, 0);
 
-  var ruler2 = new PasswordRuler(fixtureLevelWithProperValidator1);
+  let ruler2 = new PasswordRuler(fixtureLevelWithProperValidator1);
   t.false(ruler2.levels[0].x);
   t.is(ruler2.levels.length, 1);
 
-  var ruler3 = new PasswordRuler([
+  let ruler3 = new PasswordRuler([
     fixtureLevelWithProperValidator1,
     fixtureLevelWithProperValidator2
   ]);
   t.is(ruler3.levels.length, 2);
 
-  var ruler4 = new PasswordRuler([
+  let ruler4 = new PasswordRuler([
     fixtureLevelWithProperValidator1,
     fixtureLevelWithImproperValidator
   ]);
   t.is(ruler4.levels.length, 1);
 
-  var ruler5 = new PasswordRuler(fixtureLevelWithMixedValidators);
+  let ruler5 = new PasswordRuler(fixtureLevelWithMixedValidators);
   t.is(ruler5.levels.length, 1);
   t.false(ruler5.levels[0].x);
   t.notOk(ruler5.levels[0].y);
