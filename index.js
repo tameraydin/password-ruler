@@ -1,6 +1,6 @@
 'use strict'
 
-let levelValidatorsKey = Symbol();
+let validatorsKey = Symbol();
 
 class PasswordRuler {
 
@@ -9,12 +9,12 @@ class PasswordRuler {
     this.score = 0;
     this.strength = 0;
 
-    this[levelValidatorsKey] = [];
+    this[validatorsKey] = [];
 
-    PasswordRuler.processLevels(this, levels);
+    PasswordRuler.addValidators(this, levels);
   }
 
-  static processLevels(passwordRuler, levels) {
+  static addValidators(passwordRuler, levels) {
     if (!levels) {
       return
     }
@@ -32,17 +32,11 @@ class PasswordRuler {
           return;
         }
 
-        let levelOnRuler = passwordRuler.levels[levelIndex] =
-          passwordRuler.levels[levelIndex] || {};
-
-        if (passwordRuler.addValidator(
-            validatorName,
-            validatorObj.validate,
-            validatorObj.weight,
-            levelIndex)) {
-          levelOnRuler[validatorName] = false;
-          levelOnRuler.score = 0;
-        };
+        passwordRuler.addValidator(
+          validatorName,
+          validatorObj.validate,
+          validatorObj.weight,
+          levelIndex);
       });
     });
   }
@@ -59,15 +53,21 @@ class PasswordRuler {
       return false;
     }
 
-    let levelValidators = this[levelValidatorsKey];
-    let validators = levelIndex ? levelValidators[levelIndex] :
-      levelValidators[levelValidators.length - 1];
+    let validators = this[validatorsKey];
 
-    validators = validators || {};
-    validators[name] = {
+    levelIndex = typeof levelIndex === 'number' ?
+      levelIndex : Math.max(0, validators.length - 1);
+
+    validators[levelIndex] = validators[levelIndex] || {};
+
+    validators[levelIndex][name] = {
       validate: validate,
       weight: weight || 1
     };
+
+    let level = this.levels[levelIndex] = this.levels[levelIndex] || {};
+    level[name] = false;
+    level.score = 0;
 
     return this;
   }
