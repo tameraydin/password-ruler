@@ -4,45 +4,56 @@ let validatorsKey = Symbol();
 
 class PasswordRuler {
 
-  constructor(levels) {
+  constructor(levelsWithValidators) {
     this.levels = [];
     this.score = 0;
     this.strength = 0;
 
     this[validatorsKey] = [];
 
-    PasswordRuler.addValidators(this, levels);
+    PasswordRuler.init(this, levelsWithValidators);
   }
 
-  static addValidators(passwordRuler, levels) {
-    if (!levels) {
+  static init(passwordRuler, levelsWithValidators) {
+    if (!levelsWithValidators) {
       return
     }
 
-    if (!(levels instanceof Array)) {
-      levels = [levels];
+    if (!(levelsWithValidators instanceof Array)) {
+      levelsWithValidators = [levelsWithValidators];
     }
 
-    levels.forEach((level, levelIndex) => {
-
-      Object.keys(level).forEach((validatorName) => {
-        let validatorObj = level[validatorName];
-
-        if (!validatorObj) {
-          return;
-        }
-
-        passwordRuler.addValidator(
-          validatorName,
-          validatorObj.validate,
-          validatorObj.weight,
-          levelIndex);
-      });
-    });
+    levelsWithValidators.forEach(
+      (level, levelIndex) => passwordRuler.addLevel(level));
   }
 
-  calculate(password) {
+  addLevel(level) {
+    if (!level) {
+      this.levels.push({});
+      return this;
+    }
 
+    let validatorNames = Object.keys(level);
+    if (!validatorNames.length) {
+      this.levels.push({});
+      return this;
+    }
+
+    validatorNames.forEach((validatorName) => {
+      let validatorObj = level[validatorName];
+
+      if (!validatorObj) {
+        return;
+      }
+
+      this.addValidator(
+        validatorName,
+        validatorObj.validate,
+        validatorObj.weight,
+        this.levels.length);
+    });
+
+    return this;
   }
 
   addValidator(name, validate, weight, levelIndex) {
@@ -50,7 +61,7 @@ class PasswordRuler {
       typeof name !== 'string' ||
       typeof validate !== 'function' ||
       (weight && typeof weight !== 'number')) {
-      return false;
+      return this;
     }
 
     let validators = this[validatorsKey];

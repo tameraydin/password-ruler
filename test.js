@@ -41,6 +41,7 @@ test('PasswordRuler()', t => {
   t.is(ruler1.score, 0);
 
   var ruler2 = new PasswordRuler(fixtureLevelWithProperValidator1);
+  t.false(ruler2.levels[0].x);
   t.is(ruler2.levels.length, 1);
 
   var ruler3 = new PasswordRuler([
@@ -57,23 +58,38 @@ test('PasswordRuler()', t => {
 
   var ruler5 = new PasswordRuler(fixtureLevelWithMixedValidators);
   t.is(ruler5.levels.length, 1);
-  t.notOk(ruler5.levels.y);
-  t.notOk(ruler5.levels.z);
+  t.false(ruler5.levels[0].x);
+  t.notOk(ruler5.levels[0].y);
+  t.notOk(ruler5.levels[0].z);
+});
+
+test('addLevel()', t => {
+  let aRuler = new PasswordRuler();
+
+  aRuler.addLevel();
+  t.same(aRuler.levels, [{}]);
+
+  aRuler.addLevel(fixtureLevelWithProperValidator1);
+  t.is(aRuler.levels.length, 2);
+  t.false(aRuler.levels[1].x);
 });
 
 test('addValidator()', t => {
-  let ruler1 = new PasswordRuler();
+  let aRuler = new PasswordRuler();
 
-  t.false(ruler1.addValidator.apply(ruler1, fixtureImproperValidatorArgs1));
-  t.false(ruler1.addValidator.apply(ruler1, fixtureImproperValidatorArgs2));
-  t.false(ruler1.addValidator.apply(ruler1, fixtureImproperValidatorArgs3));
-  t.false(ruler1.addValidator.apply(ruler1, fixtureImproperValidatorArgs4));
+  t.is(aRuler.addValidator.apply(aRuler, fixtureImproperValidatorArgs1)
+    .levels.length, 0);
+  t.is(aRuler.addValidator.apply(aRuler, fixtureImproperValidatorArgs2)
+    .levels.length, 0);
+  t.is(aRuler.addValidator.apply(aRuler, fixtureImproperValidatorArgs3)
+    .levels.length, 0);
+  t.is(aRuler.addValidator.apply(aRuler, fixtureImproperValidatorArgs4)
+    .levels.length, 0);
 
-  t.is(ruler1.addValidator.apply(
-    ruler1, fixtureProperValidatorArgs1), ruler1);
-  t.is(ruler1.levels[0].a, false);
+  aRuler.addValidator.apply(aRuler, fixtureProperValidatorArgs1);
+  t.is(aRuler.levels.length, 1);
+  t.is(aRuler.levels[0].a, false);
 
-  t.is(ruler1.addValidator.apply(
-    ruler1, fixtureProperValidatorArgs2), ruler1);
-  t.is(ruler1.levels[0].b, false);
+  aRuler.addValidator.apply(aRuler, fixtureProperValidatorArgs2);1
+  t.is(aRuler.levels[0].b, false);
 });
