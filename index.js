@@ -1,76 +1,75 @@
 'use strict'
 
+let levelValidatorsKey = Symbol();
+
 class PasswordRuler {
-  constructor(validators) {
-    this.validators = {};
 
-    PasswordRuler.assignValidators(this, validators);
+  constructor(levels) {
+    this.levels = [];
+    this.score = 0;
+    this.strength = 0;
+
+    this[levelValidatorsKey] = [];
+
+    PasswordRuler.processLevels(this, levels);
   }
 
-  check(password) {
-    if (typeof password !== 'string') {
+  static processLevels(passwordRuler, levels) {
+    if (!levels) {
+      return
+    }
+
+    if (!(levels instanceof Array)) {
+      levels = [levels];
+    }
+
+    levels.forEach((level, levelIndex) => {
+
+      Object.keys(level).forEach((validatorName) => {
+        let validatorObj = level[validatorName];
+
+        if (!validatorObj) {
+          return;
+        }
+
+        let levelOnRuler = passwordRuler.levels[levelIndex] =
+          passwordRuler.levels[levelIndex] || {};
+
+        if (passwordRuler.addValidator(
+            validatorName,
+            validatorObj.validate,
+            validatorObj.weight,
+            levelIndex)) {
+          levelOnRuler[validatorName] = false;
+          levelOnRuler.score = 0;
+        };
+      });
+    });
+  }
+
+  calculate(password) {
+
+  }
+
+  addValidator(name, validate, weight, levelIndex) {
+    if (!name ||
+      typeof name !== 'string' ||
+      typeof validate !== 'function' ||
+      (weight && typeof weight !== 'number')) {
       return false;
     }
 
-    return new PasswordRulerResult(password, this.validators);
-  }
+    let levelValidators = this[levelValidatorsKey];
+    let validators = levelIndex ? levelValidators[levelIndex] :
+      levelValidators[levelValidators.length - 1];
 
-  addValidator(name, validate, weight) {
-    if (!name || typeof name !== 'string' ||
-        typeof validate !== 'function' ||
-        (weight && typeof weight !== 'number')) {
-      return false;
-    }
-
-    this.validators[name] = {
+    validators = validators || {};
+    validators[name] = {
       validate: validate,
       weight: weight || 1
     };
 
     return this;
-  }
-
-  static assignValidators(passwordRuler, validators) {
-    if (!(validators instanceof Object)) {
-      return passwordRuler;
-    }
-
-    Object.keys(validators).forEach((validatorName) => {
-      let validatorObj = validators[validatorName];
-      if (validatorObj) {
-        passwordRuler.addValidator(
-          validatorName, validatorObj.validate, validatorObj.weight);
-      }
-    });
-  }
-}
-
-class PasswordRulerResult {
-
-  constructor(password, validators) {
-    this.score = -1;
-    this.validators = validators;
-
-    PasswordRulerResult.calculate(this, password);
-  }
-
-  static calculate(passwordRulerResult, password) {
-    let validatorKeys = Object.keys(passwordRulerResult.validators);
-    let scorePerValidator = 100 / validatorKeys.length;
-    let score = 0;
-
-    validatorKeys.forEach(function(key) {
-      let validator = passwordRulerResult.validators[key];
-      let weight = validator.weight;
-
-      validator = !!validator.validate(password);
-
-      if (validator) {
-        score =+ scorePerValidator * weight;
-      }
-    });
-
-    passwordRulerResult.score = Math.ceil(score);
   }
 }
 

@@ -1,55 +1,87 @@
 import test from 'ava';
 import PasswordRuler from './index';
 
-const mockRuler = new PasswordRuler();
+// const mockRuler = new PasswordRuler();
 
-const fixtureProperValidators = {
-    'x': {
-      'validate': function() {},
-      'weight': 1
-    },
-    'y': {},
-    'z': null
-  };
-const fixtureImproperValidator1 = ['', function() {}];
-const fixtureImproperValidator2 = [3, function() {}];
-const fixtureImproperValidator3 = ['x', 'x'];
-const fixtureImproperValidator4 = ['x', function() {}, 'y'];
-const fixtureProperValidator1 = ['x', function() {}];
-const fixtureProperValidator2 = ['y', function() {}, 2];
-const fixtureInvalidPassword = 1;
-const fixtureValidPassword = 'x';
+const fixtureLevelWithProperValidator1 = {
+  'x': {
+    'validate': function() {},
+    'weight': 1
+  }
+};
+const fixtureLevelWithProperValidator2 = {
+  'y': {
+    'validate': function() {},
+    'weight': 2
+  }
+};
+const fixtureLevelWithImproperValidator = {
+  'x': null
+};
+const fixtureLevelWithMixedValidators = {
+  'x': {
+    'validate': function() {},
+    'weight': 1
+  },
+  'y': null
+};
+// const fixtureMixedValidators = {
+//     'x': {
+//       'validate': function() {},
+//       'weight': 1
+//     },
+//     'y': {},
+//     'z': null
+//   };
+const fixtureImproperValidatorArgs1 = ['', function() {}];
+const fixtureImproperValidatorArgs2 = [3, function() {}];
+const fixtureImproperValidatorArgs3 = ['x', 'x'];
+const fixtureImproperValidatorArgs4 = ['x', function() {}, 'y'];
+const fixtureProperValidatorArgs1 = ['a', function() {}];
+const fixtureProperValidatorArgs2 = ['b', function() {}, 2];
+// const fixtureInvalidPassword = 1;
+// const fixtureValidPassword = 'x';
 
-test('PasswordRuler', t => {
-  t.ok(mockRuler.validators);
-  t.ok(mockRuler.addValidator);
-  t.ok(mockRuler.check);
+test('PasswordRuler()', t => {
+  var ruler1 = new PasswordRuler();
 
-  let mockRulerWithRules = new PasswordRuler(fixtureProperValidators);
-  t.is(Object.keys(mockRulerWithRules.validators).length, 1);
+  t.is(ruler1.levels.length, 0);
+  t.is(ruler1.strength, 0);
+  t.is(ruler1.score, 0);
+
+  var ruler2 = new PasswordRuler(fixtureLevelWithProperValidator1);
+  t.is(ruler2.levels.length, 1);
+
+  var ruler3 = new PasswordRuler([
+    fixtureLevelWithProperValidator1,
+    fixtureLevelWithProperValidator2
+  ]);
+  t.is(ruler3.levels.length, 2);
+
+  var ruler4 = new PasswordRuler([
+    fixtureLevelWithProperValidator1,
+    fixtureLevelWithImproperValidator
+  ]);
+  t.is(ruler4.levels.length, 1);
+
+  var ruler5 = new PasswordRuler(fixtureLevelWithMixedValidators);
+  t.is(ruler5.levels.length, 1);
+  t.notOk(ruler5.levels.y);
 });
 
-test('PasswordRuler:addValidator', t => {
-  t.notOk(mockRuler.addValidator.apply(mockRuler, fixtureImproperValidator1));
-  t.notOk(mockRuler.addValidator.apply(mockRuler, fixtureImproperValidator2));
-  t.notOk(mockRuler.addValidator.apply(mockRuler, fixtureImproperValidator3));
-  t.notOk(mockRuler.addValidator.apply(mockRuler, fixtureImproperValidator4));
+test.only('addValidator()', t => {
+  let ruler1 = new PasswordRuler(fixtureLevelWithProperValidator1);
 
-  t.is(mockRuler.addValidator.apply(
-    mockRuler, fixtureProperValidator1), mockRuler);
-  t.ok(mockRuler.validators.x);
-  t.ok(mockRuler.validators.x.validate);
-  t.is(mockRuler.validators.x.weight, 1);
+  t.false(ruler1.addValidator.apply(ruler1, fixtureImproperValidatorArgs1));
+  t.false(ruler1.addValidator.apply(ruler1, fixtureImproperValidatorArgs2));
+  t.false(ruler1.addValidator.apply(ruler1, fixtureImproperValidatorArgs3));
+  t.false(ruler1.addValidator.apply(ruler1, fixtureImproperValidatorArgs4));
 
-  t.is(mockRuler.addValidator.apply(
-    mockRuler, fixtureProperValidator2), mockRuler);
-  t.is(mockRuler.validators.y.weight, 2);
-});
+  t.is(ruler1.addValidator.apply(
+    ruler1, fixtureProperValidatorArgs1), ruler1);
+  t.is(ruler1.levels[0].a, false);
 
-test('PasswordRuler:check', t => {
-  t.notOk(mockRuler.check.call(mockRuler, fixtureInvalidPassword));
-
-  let validResult = mockRuler.check.call(mockRuler, fixtureValidPassword);
-  t.ok(validResult);
-  t.is(validResult.constructor.name, 'PasswordRulerResult');
+  t.is(ruler1.addValidator.apply(
+    ruler1, fixtureProperValidatorArgs2), ruler1);
+  t.is(ruler1.levels[0].y, false);
 });
