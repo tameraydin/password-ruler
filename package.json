@@ -2,10 +2,14 @@
   "name": "password-ruler",
   "scripts": {
     "watch": "onchange '*.js' -- ava",
-    "test": "ava"
+    "test": "ava",
+    "coverage": "nyc npm test",
+    "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls"
   },
   "devDependencies": {
     "ava": "^0.11.0",
+    "coveralls": "^2.11.6",
+    "nyc": "^5.6.0",
     "onchange": "^2.0.0"
   }
 }
