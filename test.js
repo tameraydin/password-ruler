@@ -3,13 +3,13 @@ import PasswordRuler from './index';
 
 const fixtureLevelWithProperValidator1 = {
   'x': {
-    'validator': function() {},
+    'validate': function() {},
     'weight': 1
   }
 };
 const fixtureLevelWithProperValidator2 = {
   'y': {
-    'validator': function() {},
+    'validate': function() {},
     'weight': 2
   }
 };
@@ -18,11 +18,11 @@ const fixtureLevelWithImproperValidator = {
 };
 const fixtureLevelsWithMixedValidators = [{
   'a': {
-    'validator': function() {},
+    'validate': function() {},
     'weight': 1
   },
   'b': {
-    'validator': function() {},
+    'validate': function() {},
     'weight': 1
   },
   'c': 1
@@ -48,7 +48,7 @@ test('PasswordRuler()', t => {
 
   let ruler2 = new PasswordRuler(fixtureLevelWithProperValidator1);
   t.is(ruler2.levels.length, 1);
-  t.ok(ruler2.levels[0].validators.x.validator);
+  t.ok(ruler2.levels[0].validators.x.validate);
   t.is(ruler2.levels[0].validators.x.weight, 1);
 
   let ruler3 = new PasswordRuler([

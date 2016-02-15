@@ -42,7 +42,7 @@ class PasswordRuler {
 
       this.addValidator(
         validatorName,
-        validatorObj.validator,
+        validatorObj.validate,
         validatorObj.weight,
         this.levels.length - 1);
     });
@@ -50,10 +50,10 @@ class PasswordRuler {
     return this;
   }
 
-  addValidator(name, validator, weight, levelIndex) {
+  addValidator(name, validate, weight, levelIndex) {
     if (!name ||
       typeof name !== 'string' ||
-      typeof validator !== 'function' ||
+      typeof validate !== 'function' ||
       (weight && typeof weight !== 'number')) {
       return this;
     }
@@ -65,7 +65,7 @@ class PasswordRuler {
 
     levels[levelIndex] = levels[levelIndex] || { validators: {} };
     levels[levelIndex].validators[name] = {
-      validator: validator,
+      validate: validate,
       weight: weight || 1
     };
 
