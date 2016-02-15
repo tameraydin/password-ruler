@@ -2,27 +2,27 @@
 
 class PasswordRuler {
 
-  constructor(levelsWithValidators) {
+  constructor(levels) {
     this.levels = [];
 
-    PasswordRuler.init(this, levelsWithValidators);
+    PasswordRuler.init(this, levels);
   }
 
-  static init(passwordRuler, levelsWithValidators) {
-    if (!levelsWithValidators) {
+  static init(passwordRuler, levels) {
+    if (!levels) {
       return
     }
 
-    if (!(levelsWithValidators instanceof Array)) {
-      levelsWithValidators = [levelsWithValidators];
+    if (!(levels instanceof Array)) {
+      levels = [levels];
     }
 
-    levelsWithValidators.forEach(
+    levels.forEach(
       (level, levelIndex) => passwordRuler.addLevel(level));
   }
 
   addLevel(level) {
-    this.levels.push({});
+    this.levels.push({ validators: {} });
 
     if (!level) {
       return this;
@@ -63,8 +63,8 @@ class PasswordRuler {
     levelIndex = typeof levelIndex === 'number' && levels[levelIndex] ?
       levelIndex : Math.max(0, levels.length - 1);
 
-    levels[levelIndex] = levels[levelIndex] || {};
-    levels[levelIndex][name] = {
+    levels[levelIndex] = levels[levelIndex] || { validators: {} };
+    levels[levelIndex].validators[name] = {
       validator: validator,
       weight: weight || 1
     };
