@@ -16,20 +16,32 @@ const fixtureLevelWithProperValidator2 = {
 const fixtureLevelWithImproperValidator = {
   'x': null
 };
-const fixtureLevelWithMixedValidators = {
-  'x': {
-    'validator': function() {},
-    'weight': 1
+const fixtureLevelsWithMixedValidators = [
+  {
+    'a': {
+      'validator': function() {},
+      'weight': 1
+    },
+    'b': {
+      'validator': function() {},
+      'weight': 1
+    },
+    'c': 1
   },
-  'y': {},
-  'z': null
-};
+  {
+    'd': {}
+  },
+  {
+    'e': null
+  }
+];
 const fixtureImproperValidatorArgs1 = ['', function() {}];
 const fixtureImproperValidatorArgs2 = [3, function() {}];
 const fixtureImproperValidatorArgs3 = ['x', 'x'];
 const fixtureImproperValidatorArgs4 = ['x', function() {}, 'y'];
 const fixtureProperValidatorArgs1 = ['a', function() {}];
 const fixtureProperValidatorArgs2 = ['b', function() {}, 2];
+const fixtureProperValidatorArgs3 = ['c', function() {}, 1, 99];
 // const fixtureInvalidPassword = 1;
 // const fixtureValidPassword = 'x';
 
@@ -53,13 +65,15 @@ test('PasswordRuler()', t => {
     fixtureLevelWithProperValidator1,
     fixtureLevelWithImproperValidator
   ]);
-  t.is(ruler4.levels.length, 1);
+  t.is(ruler4.levels.length, 2);
 
-  let ruler5 = new PasswordRuler(fixtureLevelWithMixedValidators);
-  t.is(ruler5.levels.length, 1);
-  t.ok(ruler5.levels[0].x);
-  t.notOk(ruler5.levels[0].y);
-  t.notOk(ruler5.levels[0].z);
+  let ruler5 = new PasswordRuler(fixtureLevelsWithMixedValidators);
+  t.is(ruler5.levels.length, 3);
+  t.ok(ruler5.levels[0].a);
+  t.ok(ruler5.levels[0].b);
+  t.notOk(ruler5.levels[0].c);
+  t.notOk(ruler5.levels[0].c);
+  t.notOk(ruler5.levels[0].d);
 });
 
 test('addLevel()', t => {
@@ -89,6 +103,10 @@ test('addValidator()', t => {
   t.is(aRuler.levels.length, 1);
   t.ok(aRuler.levels[0].a);
 
-  aRuler.addValidator.apply(aRuler, fixtureProperValidatorArgs2);1
+  aRuler.addValidator.apply(aRuler, fixtureProperValidatorArgs2);
   t.ok(aRuler.levels[0].b);
+
+  aRuler.addValidator.apply(aRuler, fixtureProperValidatorArgs3);
+  t.is(aRuler.levels.length, 1);
+  t.ok(aRuler.levels[0].c);
 });

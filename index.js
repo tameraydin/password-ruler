@@ -22,14 +22,14 @@ class PasswordRuler {
   }
 
   addLevel(level) {
+    this.levels.push({});
+
     if (!level) {
-      this.levels.push({});
       return this;
     }
 
     let validatorNames = Object.keys(level);
     if (!validatorNames.length) {
-      this.levels.push({});
       return this;
     }
 
@@ -44,7 +44,7 @@ class PasswordRuler {
         validatorName,
         validatorObj.validator,
         validatorObj.weight,
-        this.levels.length);
+        this.levels.length - 1);
     });
 
     return this;
@@ -60,7 +60,7 @@ class PasswordRuler {
 
     let levels = this.levels;
 
-    levelIndex = typeof levelIndex === 'number' ?
+    levelIndex = typeof levelIndex === 'number' && levels[levelIndex] ?
       levelIndex : Math.max(0, levels.length - 1);
 
     levels[levelIndex] = levels[levelIndex] || {};
