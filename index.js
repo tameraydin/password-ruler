@@ -1,15 +1,9 @@
 'use strict'
 
-let validatorsKey = Symbol();
-
 class PasswordRuler {
 
   constructor(levelsWithValidators) {
     this.levels = [];
-    this.score = 0;
-    this.strength = 0;
-
-    this[validatorsKey] = [];
 
     PasswordRuler.init(this, levelsWithValidators);
   }
@@ -48,7 +42,7 @@ class PasswordRuler {
 
       this.addValidator(
         validatorName,
-        validatorObj.validate,
+        validatorObj.validator,
         validatorObj.weight,
         this.levels.length);
     });
@@ -56,29 +50,24 @@ class PasswordRuler {
     return this;
   }
 
-  addValidator(name, validate, weight, levelIndex) {
+  addValidator(name, validator, weight, levelIndex) {
     if (!name ||
       typeof name !== 'string' ||
-      typeof validate !== 'function' ||
+      typeof validator !== 'function' ||
       (weight && typeof weight !== 'number')) {
       return this;
     }
 
-    let validators = this[validatorsKey];
+    let levels = this.levels;
 
     levelIndex = typeof levelIndex === 'number' ?
-      levelIndex : Math.max(0, validators.length - 1);
+      levelIndex : Math.max(0, levels.length - 1);
 
-    validators[levelIndex] = validators[levelIndex] || {};
-
-    validators[levelIndex][name] = {
-      validate: validate,
+    levels[levelIndex] = levels[levelIndex] || {};
+    levels[levelIndex][name] = {
+      validator: validator,
       weight: weight || 1
     };
-
-    let level = this.levels[levelIndex] = this.levels[levelIndex] || {};
-    level[name] = false;
-    level.score = 0;
 
     return this;
   }

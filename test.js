@@ -3,13 +3,13 @@ import PasswordRuler from './index';
 
 const fixtureLevelWithProperValidator1 = {
   'x': {
-    'validate': function() {},
+    'validator': function() {},
     'weight': 1
   }
 };
 const fixtureLevelWithProperValidator2 = {
   'y': {
-    'validate': function() {},
+    'validator': function() {},
     'weight': 2
   }
 };
@@ -18,7 +18,7 @@ const fixtureLevelWithImproperValidator = {
 };
 const fixtureLevelWithMixedValidators = {
   'x': {
-    'validate': function() {},
+    'validator': function() {},
     'weight': 1
   },
   'y': {},
@@ -37,12 +37,11 @@ test('PasswordRuler()', t => {
   let ruler1 = new PasswordRuler();
 
   t.is(ruler1.levels.length, 0);
-  t.is(ruler1.strength, 0);
-  t.is(ruler1.score, 0);
 
   let ruler2 = new PasswordRuler(fixtureLevelWithProperValidator1);
-  t.false(ruler2.levels[0].x);
   t.is(ruler2.levels.length, 1);
+  t.ok(ruler2.levels[0].x.validator);
+  t.is(ruler2.levels[0].x.weight, 1);
 
   let ruler3 = new PasswordRuler([
     fixtureLevelWithProperValidator1,
@@ -58,7 +57,7 @@ test('PasswordRuler()', t => {
 
   let ruler5 = new PasswordRuler(fixtureLevelWithMixedValidators);
   t.is(ruler5.levels.length, 1);
-  t.false(ruler5.levels[0].x);
+  t.ok(ruler5.levels[0].x);
   t.notOk(ruler5.levels[0].y);
   t.notOk(ruler5.levels[0].z);
 });
@@ -71,7 +70,7 @@ test('addLevel()', t => {
 
   aRuler.addLevel(fixtureLevelWithProperValidator1);
   t.is(aRuler.levels.length, 2);
-  t.false(aRuler.levels[1].x);
+  t.ok(aRuler.levels[1].x);
 });
 
 test('addValidator()', t => {
@@ -88,8 +87,8 @@ test('addValidator()', t => {
 
   aRuler.addValidator.apply(aRuler, fixtureProperValidatorArgs1);
   t.is(aRuler.levels.length, 1);
-  t.is(aRuler.levels[0].a, false);
+  t.ok(aRuler.levels[0].a);
 
   aRuler.addValidator.apply(aRuler, fixtureProperValidatorArgs2);1
-  t.is(aRuler.levels[0].b, false);
+  t.ok(aRuler.levels[0].b);
 });
