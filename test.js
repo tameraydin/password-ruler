@@ -51,6 +51,14 @@ const resultOfEmptyLevels = {
   strength: 0,
   levels: []
 };
+const resultOfALevelWithoutValidators = {
+  score: 0,
+  strength: 0,
+  levels: [{
+    score: 0,
+    validator: {}
+  }]
+};
 
 const fixtureLevel1 = {
   alwaysValid: {
@@ -269,6 +277,9 @@ test('check()', t => {
 
   const emptyRuler = new PasswordRuler();
   t.same(emptyRuler.check(fixtureValidPassword), resultOfEmptyLevels);
+
+  emptyRuler.addLevel();
+  t.same(emptyRuler.check(fixtureValidPassword), resultOfALevelWithoutValidators);
 
   const ruler1 = new PasswordRuler(fixtureLevel1);
   t.same(ruler1.check(fixtureInvalidPassword), resultOfFixtureLevel1WithInvalidPassword);
