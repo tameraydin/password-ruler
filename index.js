@@ -93,23 +93,25 @@ class PasswordRuler {
       Object.keys(level.validator).forEach((validatorName) => {
         let validatorObj = level.validator[validatorName];
         let isValid = levelResult.validator[validatorName] =
-          !!(isPreviousLevelValid &&
-            typeof password === 'string' &&
-            validatorObj.validate(password));
+          (!isPreviousLevelValid || typeof password !== 'string') ?
+            undefined : !!validatorObj.validate(password);
 
-        levelValidatorCount =+ validatorObj.weight;
-        totalValidatorCount =+ validatorObj.weight;
+        levelValidatorCount += validatorObj.weight;
+        totalValidatorCount += validatorObj.weight;
 
         if (isValid) {
-          levelValidValidatorCount =+ validatorObj.weight;
-          totalValidValidatorCount =+ validatorObj.weight;
+          levelValidValidatorCount += validatorObj.weight;
+          totalValidValidatorCount += validatorObj.weight;
         }
       });
 
       levelResult.score = levelValidatorCount ?
-        100 * levelValidValidatorCount / levelValidatorCount : 0;
+        Math.floor(100 * levelValidValidatorCount / levelValidatorCount) : 0;
 
-      if (levelResult.score === 100) {
+      if (levelResult.score < 100) {
+        isPreviousLevelValid = false;
+
+      } else {
         isPreviousLevelValid = true;
         result.strength++;
       }
@@ -118,7 +120,7 @@ class PasswordRuler {
     });
 
     result.score = totalValidatorCount ?
-      100 * totalValidValidatorCount / totalValidatorCount : 0;
+      Math.floor(100 * totalValidValidatorCount / totalValidatorCount) : 0;
     return result;
   }
 }
