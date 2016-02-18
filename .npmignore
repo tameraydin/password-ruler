@@ -1,0 +1,7 @@
+coverage
+test
+src
+.nyc_output
+.gitignore
+.travis.yml
+.eslintrc
