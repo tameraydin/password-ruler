@@ -1,14 +1,17 @@
 {
   "name": "password-ruler",
   "scripts": {
-    "watch": "onchange 'src/*.js' 'test/*.js' -- ava",
+    "watch": "onchange 'src/*.js' 'test/*.js' -- npm run validate",
+    "validate": "eslint src && ava || true",
     "test": "ava",
     "coverage": "nyc npm test",
     "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls"
   },
   "devDependencies": {
     "ava": "^0.11.0",
+    "babel-eslint": "^5.0.0",
     "coveralls": "^2.11.6",
+    "eslint": "^2.1.0",
     "nyc": "^5.6.0",
     "onchange": "^2.0.0"
   }
