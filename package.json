@@ -1,7 +1,7 @@
 {
   "name": "password-ruler",
   "scripts": {
-    "watch": "onchange '*.js' -- ava",
+    "watch": "onchange 'src/*.js' 'test/*.js' -- ava",
     "test": "ava",
     "coverage": "nyc npm test",
     "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls"

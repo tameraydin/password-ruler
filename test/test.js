@@ -1,5 +1,5 @@
 import test from 'ava';
-import PasswordRuler from './index';
+import PasswordRuler from '../src/index';
 
 // LEVEL FIXTURES:
 const fixtureLevelWithProperValidator1 = {
