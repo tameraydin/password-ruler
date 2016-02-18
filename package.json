@@ -1,17 +1,48 @@
 {
   "name": "password-ruler",
+  "version": "0.1.0",
+  "description": "Extensible password strength checker",
+  "main": "dist/password-ruler.js",
   "scripts": {
     "watch": "onchange 'src/*.js' 'test/*.js' -- npm run validate",
     "validate": "eslint src && ava || true",
     "test": "ava",
     "coverage": "nyc npm test",
-    "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls"
+    "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls",
+    "compile": "mkdirp 'dist' && browserify --standalone 'Password-ruler' src/index.js -o dist/password-ruler.js -t [ babelify --presets [ es2015 ] ]"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tameraydin/password-ruler.git"
+  },
+  "keywords": [
+    "password",
+    "strength",
+    "checker",
+    "meter",
+    "rule",
+    "validation",
+    "validator",
+    "generator"
+  ],
+  "author": "Tamer Aydin (http://tamerayd.in)",
+  "contributors": [{
+    "name": "Tamer Aydin",
+    "url": "http://tamerayd.in"
+  }],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tameraydin/password-ruler/issues"
+  },
+  "homepage": "https://github.com/tameraydin/password-ruler",
   "devDependencies": {
     "ava": "^0.11.0",
     "babel-eslint": "^5.0.0",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
     "coveralls": "^2.11.6",
     "eslint": "^2.1.0",
+    "mkdirp": "^0.5.1",
     "nyc": "^5.6.0",
     "onchange": "^2.0.0"
   }
