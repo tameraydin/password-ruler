@@ -97,11 +97,8 @@ class PasswordRuler {
             undefined : !!validatorObj.validate(password);
 
         levelValidatorCount += validatorObj.weight;
-        totalValidatorCount += validatorObj.weight;
-
         if (isValid) {
           levelValidValidatorCount += validatorObj.weight;
-          totalValidValidatorCount += validatorObj.weight;
         }
       });
 
@@ -115,6 +112,9 @@ class PasswordRuler {
         isPreviousLevelValid = true;
         result.strength++;
       }
+
+      totalValidatorCount += levelValidatorCount;
+      totalValidValidatorCount += levelValidValidatorCount;
 
       return levelResult;
     });
