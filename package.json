@@ -9,7 +9,7 @@
     "test": "ava",
     "coverage": "nyc npm test",
     "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls",
-    "compile": "mkdirp 'dist' && browserify --standalone 'Password-ruler' src/index.js -o dist/password-ruler.js -t [ babelify --presets [ es2015 ] ]"
+    "transpile": "mkdirp 'dist' && browserify --standalone 'Password-meter' src/index.js -o dist/password-meter.js -t [ babelify --presets [ es2015 ] ]"
   },
   "repository": {
     "type": "git",
