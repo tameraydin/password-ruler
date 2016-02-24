@@ -73,6 +73,10 @@ class PasswordRuler {
   }
 
   check(password) {
+    if (typeof password !== 'string') {
+      throw new TypeError('Password must be a string.');
+    }
+
     let totalValidatorCount = 0;
     let totalValidValidatorCount = 0;
     let isPreviousLevelValid = true;
@@ -93,8 +97,7 @@ class PasswordRuler {
       Object.keys(level.validator).forEach((validatorName) => {
         let validatorObj = level.validator[validatorName];
         let isValid = levelResult.validator[validatorName] =
-          (!isPreviousLevelValid || typeof password !== 'string') ?
-            undefined : !!validatorObj.validate(password);
+          !isPreviousLevelValid ? undefined : !!validatorObj.validate(password);
 
         levelValidatorCount += validatorObj.weight;
         if (isValid) {

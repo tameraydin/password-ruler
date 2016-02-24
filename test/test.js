@@ -67,16 +67,6 @@ const fixtureLevel1 = {
     }
   }
 };
-const resultOfFixtureLevel1WithInvalidPassword = {
-  score: 0,
-  strength: 0,
-  levels: [{
-    score: 0,
-    validator: {
-      alwaysValid: undefined
-    }
-  }]
-};
 const resultOfFixtureLevel1WithValidPassword = {
   score: 100,
   strength: 1,
@@ -282,7 +272,7 @@ test('check()', t => {
   t.same(emptyRuler.check(fixtureValidPassword), resultOfALevelWithoutValidators);
 
   const ruler1 = new PasswordRuler(fixtureLevel1);
-  t.same(ruler1.check(fixtureInvalidPassword), resultOfFixtureLevel1WithInvalidPassword);
+  t.throws(() => ruler1.check(fixtureInvalidPassword));
   t.same(ruler1.check(fixtureValidPassword), resultOfFixtureLevel1WithValidPassword);
 
   const ruler2 = new PasswordRuler(fixtureLevel2);
