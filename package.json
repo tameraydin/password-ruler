@@ -9,7 +9,8 @@
     "test": "ava",
     "coverage": "nyc npm test",
     "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls",
-    "transpile": "mkdirp 'dist' && browserify --standalone 'Password-ruler' src/index.js -o dist/password-ruler.js -t [ babelify --presets [ es2015 ] ]"
+    "transpile": "mkdirp 'dist' && browserify --standalone 'Password-ruler' src/index.js -o dist/password-ruler.js -t [ babelify --presets [ es2015 ] ]",
+    "header": "header dist/*.js"
   },
   "repository": {
     "type": "git",
@@ -26,10 +27,12 @@
     "generator"
   ],
   "author": "Tamer Aydin (http://tamerayd.in)",
-  "contributors": [{
-    "name": "Tamer Aydin",
-    "url": "http://tamerayd.in"
-  }],
+  "contributors": [
+    {
+      "name": "Tamer Aydin",
+      "url": "http://tamerayd.in"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tameraydin/password-ruler/issues"
@@ -43,6 +46,7 @@
     "coveralls": "^2.11.6",
     "eslint": "^2.1.0",
     "mkdirp": "^0.5.1",
+    "module-header": "^0.3.0",
     "nyc": "^5.6.0",
     "onchange": "^2.0.0"
   }
