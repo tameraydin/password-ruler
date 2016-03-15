@@ -142,9 +142,68 @@ ruler.check('**Test1234');
 // }
 ```
 
+<a name="module_PasswordRuler"></a>
+
 ### API
 
-TODO
+* [PasswordRuler](#module_PasswordRuler)
+    * _instance_
+        * [.addLevel(level)](#module_PasswordRuler+addLevel) ⇒ <code>PasswordRuler</code>
+        * [.addValidator(name, validate, weight, [levelIndex])](#module_PasswordRuler+addValidator) ⇒ <code>PasswordRuler</code>
+        * [.check(password)](#module_PasswordRuler+check) ⇒ <code>Object</code>
+    * _static_
+        * [.init(passwordRuler, levels)](#module_PasswordRuler.init)
+
+<a name="module_PasswordRuler+addLevel"></a>
+
+#### addLevel(level) ⇒ <code>PasswordRuler</code>
+Adds a new level on top of existing levels.
+
+**Kind**: instance method of <code>[PasswordRuler](#module_PasswordRuler)</code>
+**Returns**: <code>PasswordRuler</code> - PasswordRuler instance's itself
+
+| Param | Type | Description |
+| --- | --- | --- |
+| level | <code>Object</code> | A level object with one or multiple validators |
+
+<a name="module_PasswordRuler+addValidator"></a>
+
+#### addValidator(name, validate, weight, [levelIndex]) ⇒ <code>PasswordRuler</code>
+Adds a new validator to the given or last level.
+
+**Kind**: instance method of <code>[PasswordRuler](#module_PasswordRuler)</code>
+**Returns**: <code>PasswordRuler</code> - PasswordRuler instance's itself
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | Validator name |
+| validate | <code>function</code> | Validation function |
+| weight | <code>Integer</code> | Validator importance rate |
+| [levelIndex] | <code>Integer</code> | Index of level (If it is not available, validator will be added to the last level) |
+
+<a name="module_PasswordRuler+check"></a>
+
+#### check(password) ⇒ <code>Object</code>
+Checks the given password & provides a result object
+
+**Kind**: instance method of <code>[PasswordRuler](#module_PasswordRuler)</code>
+**Returns**: <code>Object</code> - A result object that contains score, strenght & level props
+
+| Param | Type | Description |
+| --- | --- | --- |
+| password | <code>String</code> | Password to check |
+
+<a name="module_PasswordRuler.init"></a>
+
+#### PasswordRuler.init(passwordRuler, levels)
+Applies each given levels to the given PasswordRuler instance
+
+**Kind**: static method of <code>[PasswordRuler](#module_PasswordRuler)</code>
+
+| Param | Type | Description |
+| --- | --- | --- |
+| passwordRuler | <code>PasswordRuler</code> | An instance of PasswordRuler |
+| levels | <code>Array</code> &#124; <code>Object</code> | A level list with validators or a single level object |
 
 ### Related
 
