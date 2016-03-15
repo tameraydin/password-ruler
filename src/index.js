@@ -1,5 +1,8 @@
 'use strict'
 
+/**
+ * @exports PasswordRuler
+ */
 class PasswordRuler {
 
   constructor(levels) {
@@ -8,6 +11,12 @@ class PasswordRuler {
     PasswordRuler.init(this, levels);
   }
 
+  /**
+   * Applies each given levels to the given PasswordRuler instance
+   *
+   * @param  {PasswordRuler} passwordRuler An instance of PasswordRuler
+   * @param  {Array|Object}  levels        A level list with validators or a single level object
+   */
   static init(passwordRuler, levels) {
     if (!levels) {
       return
@@ -21,6 +30,12 @@ class PasswordRuler {
       (level, levelIndex) => passwordRuler.addLevel(level));
   }
 
+  /**
+   * Adds a new level on top of existing levels.
+   *
+   * @param  {Object}        level A level object with one or multiple validators
+   * @return {PasswordRuler}       PasswordRuler instance's itself
+   */
   addLevel(level) {
     this.levels.push({ validator: {} });
 
@@ -50,6 +65,15 @@ class PasswordRuler {
     return this;
   }
 
+  /**
+   * Adds a new validator to the given or last level.
+   *
+   * @param  {String}        name         Validator name
+   * @param  {Function}      validate     Validation function
+   * @param  {Integer}       weight       Validator importance rate
+   * @param  {Integer}       [levelIndex] Index of level (If it is not available, validator will be added to the last level)
+   * @return {PasswordRuler}              PasswordRuler instance's itself
+   */
   addValidator(name, validate, weight, levelIndex) {
     if (!name ||
       typeof name !== 'string' ||
@@ -72,6 +96,12 @@ class PasswordRuler {
     return this;
   }
 
+  /**
+   * Checks the given password & provides a result object
+   *
+   * @param  {String} password Password to check
+   * @return {Object}          A result object that contains score, strenght & level props
+   */
   check(password) {
     if (typeof password !== 'string') {
       throw new TypeError('Password must be a string.');

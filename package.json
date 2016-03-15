@@ -12,7 +12,8 @@
     "transpile": "mkdirp 'dist' && browserify --standalone 'Password-ruler' src/index.js -o dist/password-ruler.js -t [ babelify --presets [ es2015 ] ]",
     "header": "header dist/*.js",
     "uglify": "uglifyjs dist/password-ruler.js --c --m --o dist/password-ruler.min.js",
-    "build": "npm run transpile && npm run uglify && header dist/*.js"
+    "build": "npm run transpile && npm run uglify && header dist/*.js",
+    "jsdoc": "jsdoc2md src/index.js > JSDOC.md"
   },
   "repository": {
     "type": "git",
@@ -48,6 +49,7 @@
     "browserify": "^13.0.0",
     "coveralls": "^2.11.6",
     "eslint": "^2.1.0",
+    "jsdoc-to-markdown": "^1.3.3",
     "mkdirp": "^0.5.1",
     "module-header": "^0.5.0",
     "nyc": "^5.6.0",
