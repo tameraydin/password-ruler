@@ -160,11 +160,12 @@ ruler.check('**Test1234');
 Adds a new level on top of existing levels.
 
 **Kind**: instance method of <code>[PasswordRuler](#module_PasswordRuler)</code>
-**Returns**: <code>PasswordRuler</code> - PasswordRuler instance's itself
 
 | Param | Type | Description |
 | --- | --- | --- |
 | level | <code>Object</code> | A level object with one or multiple validators |
+
+**Returns**: <code>PasswordRuler</code> - PasswordRuler instance's itself
 
 <a name="module_PasswordRuler+addValidator"></a>
 
@@ -172,7 +173,6 @@ Adds a new level on top of existing levels.
 Adds a new validator to the given or last level.
 
 **Kind**: instance method of <code>[PasswordRuler](#module_PasswordRuler)</code>
-**Returns**: <code>PasswordRuler</code> - PasswordRuler instance's itself
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -181,17 +181,20 @@ Adds a new validator to the given or last level.
 | weight | <code>Integer</code> | Validator importance rate |
 | [levelIndex] | <code>Integer</code> | Index of level (If it is not available, validator will be added to the last level) |
 
+**Returns**: <code>PasswordRuler</code> - PasswordRuler instance's itself
+
 <a name="module_PasswordRuler+check"></a>
 
 #### check(password) ⇒ <code>Object</code>
 Checks the given password & provides a result object
 
 **Kind**: instance method of <code>[PasswordRuler](#module_PasswordRuler)</code>
-**Returns**: <code>Object</code> - A result object that contains score, strenght & level props
 
 | Param | Type | Description |
 | --- | --- | --- |
 | password | <code>String</code> | Password to check |
+
+**Returns**: <code>Object</code> - A result object that contains score, strenght & level props
 
 <a name="module_PasswordRuler.init"></a>
 
