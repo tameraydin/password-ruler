@@ -57,33 +57,11 @@ ruler.check('test');
 //   }]
 // }
 
-ruler.check('Test');
-// => {
-//   score: 60,
-//   strength: 0,
-//   levels: [{
-//     score: 60,
-//     validator: {
-//       minLength: true,
-//       containsAnUppercase: true,
-//       containsASpecialCharacter: false
-//     }
-//   }]
-// }
+ruler.check('Test').score; // => 60
+ruler.check('Test').strength; // => 0
 
-ruler.check('Test*');
-// => {
-//   score: 100,
-//   strength: 1,
-//   levels: [{
-//     score: 100,
-//     validator: {
-//       minLength: true,
-//       containsAnUppercase: true,
-//       containsASpecialCharacter: true
-//     }
-//   }]
-// }
+ruler.check('Test*').score; // => 100
+ruler.check('Test*').strength; // => 1
 ```
 
 #### Multiple strength-levels
